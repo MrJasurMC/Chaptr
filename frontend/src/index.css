@@ -19,7 +19,15 @@ html.dark {
 input,
 textarea,
 select {
+  @apply rounded-xl border border-paper-border bg-paper-surface/50 px-4 py-3 text-sm text-paper-text shadow-sm outline-none transition placeholder:text-paper-sub dark:border-ink-border dark:bg-ink-surface/50 dark:text-ink-text dark:placeholder:text-ink-sub;
   color: inherit;
+  font: inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  @apply border-gold ring-1 ring-gold/40;
 }
 
 select {
@@ -30,7 +38,6 @@ select {
   color-scheme: dark;
 }
 
-/* Kill Chrome's default autofill white box, keep it matching the field */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -45,7 +52,6 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: #F5F1E8;
 }
 
-/* Visible keyboard focus everywhere — mouse clicks don't show it, tabbing does */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
