@@ -16,6 +16,7 @@ export default function Categories() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("default");
   const [sortOpen, setSortOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const sortOptions = [
     ["default", "Sort: Default"],
     ["newest", "Newest first"],
@@ -65,7 +66,7 @@ export default function Categories() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mb-5">
+      <div className="flex flex-col sm:flex-row gap-3 max-w-4xl mb-10">
         <label className="flex items-center gap-3 flex-1 rounded-xl border border-paper-border dark:border-ink-border bg-paper-surface/50 dark:bg-ink-surface/50 px-4 py-3 shadow-sm transition focus-within:border-gold focus-within:ring-1 focus-within:ring-gold/40">
           <LuSearch size={18} className="shrink-0 text-paper-sub dark:text-ink-sub" />
           <input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search by title or author..." className={inputClassName} aria-label="Search books" />
@@ -81,17 +82,18 @@ export default function Categories() {
               </button>)}
           </div>}
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 mb-10">
-        <button onClick={() => setActive(null)} aria-pressed={active === null} className={`min-h-0 px-3 py-2.5 rounded-lg text-sm text-left border transition ${active === null ? "border-gold bg-gold/10 text-gold" : "border-paper-border dark:border-ink-border text-paper-sub dark:text-ink-sub hover:border-gold/60 hover:bg-gold/5"}`}>
-          <span className="block font-medium">All shelves</span>
-          <span className="block mt-0.5 text-[11px] opacity-60">{books.length} books</span>
-        </button>
-        {categories.map(c => <button key={c.id} onClick={() => setActive(c.id)} aria-pressed={active === c.id} className={`min-h-0 px-3 py-2.5 rounded-lg text-sm text-left border transition ${active === c.id ? "border-gold bg-gold/10 text-gold" : "border-paper-border dark:border-ink-border text-paper-sub dark:text-ink-sub hover:border-gold/60 hover:bg-gold/5"}`}>
-            <span className="block font-medium truncate">{c.name}</span>
-            <span className="block mt-0.5 text-[11px] opacity-60">{bookCount(c.id)} books</span>
-          </button>)}
+        <div className="relative sm:w-52">
+          <button type="button" onClick={() => setCategoryOpen(open => !open)} aria-label="Filter by category" aria-expanded={categoryOpen} className="flex w-full items-center justify-between rounded-xl border border-paper-border dark:border-ink-border bg-paper-surface/50 dark:bg-ink-surface/50 px-4 py-3 text-sm text-paper-text dark:text-ink-text shadow-sm outline-none transition hover:border-gold/60 focus:border-gold focus:ring-1 focus:ring-gold/50">
+            {active === null ? "All categories" : categories.find(category => category.id === active)?.name || "All categories"}
+            <LuChevronDown size={17} className={`text-paper-sub dark:text-ink-sub transition-transform ${categoryOpen ? "rotate-180" : ""}`} />
+          </button>
+          {categoryOpen && <div className="absolute z-20 mt-2 w-full max-h-64 overflow-y-auto rounded-xl border border-paper-border dark:border-ink-border bg-paper-surface dark:bg-ink-surface p-1 shadow-xl">
+            <button type="button" onClick={() => { setActive(null); setCategoryOpen(false); }} className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition ${active === null ? "bg-gold/15 text-gold" : "text-paper-text dark:text-ink-text hover:bg-gold/10"}`}>All categories</button>
+            {categories.map(category => <button key={category.id} type="button" onClick={() => { setActive(category.id); setCategoryOpen(false); }} className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition ${active === category.id ? "bg-gold/15 text-gold" : "text-paper-text dark:text-ink-text hover:bg-gold/10"}`}>
+              {category.name}
+            </button>)}
+          </div>}
+        </div>
       </div>
 
       {visibleBooks.length === 0 ? <div className="flex flex-col items-center text-center py-20 text-paper-sub dark:text-ink-sub">
